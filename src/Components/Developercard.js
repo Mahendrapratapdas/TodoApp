@@ -1,6 +1,6 @@
 const DeveloperCard = ({ data }) => {
     return (
-        <div className="h-[400px] w-[450px] bg-pink-100 border rounded-xl flex flex-col justify-center items-center shadow-xl">
+        <div className="h-[400px] w-[350px] bg-pink-100 border rounded-xl flex flex-col justify-center items-center shadow-xl">
             <div className="h-1/4 w-28 m-4">
                 <img src={data?.avatar_url} alt="Pic" className="rounded-full" />
             </div>

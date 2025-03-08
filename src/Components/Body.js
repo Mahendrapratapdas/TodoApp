@@ -2,7 +2,7 @@ import axios from "axios";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 const Card = lazy(() => import("./Card"));
-const Loading = lazy(()=> import("./Loading"));
+const Loading = lazy(() => import("./Loading"));
 const GET_TODO = process.env.REACT_APP_GET_TODO;
 const POST_DATA = process.env.REACT_APP_POST_TODO;
 const PUT_DATA = process.env.REACT_APP_PUT_TODO;
@@ -21,7 +21,7 @@ const Body = () => {
             console.log(e)
             toast.error("Oops.. something went wrong!!", {
                 position: "top-right",
-                autoClose: 5000,
+                autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: false,
                 pauseOnHover: true,
@@ -37,7 +37,7 @@ const Body = () => {
         if (addTodo.title.length === 0) {
             toast.info("Title can't be empty", {
                 position: "top-right",
-                autoClose: 5000,
+                autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: false,
                 pauseOnHover: true,
@@ -54,7 +54,7 @@ const Body = () => {
                 fetchApi();
                 toast.success("Todo Add successfully!!", {
                     position: "top-right",
-                    autoClose: 5000,
+                    autoClose: 2000,
                     hideProgressBar: false,
                     closeOnClick: false,
                     pauseOnHover: true,
@@ -69,7 +69,7 @@ const Body = () => {
             console.log(e)
             toast.error("Oops.. something went wrong!!", {
                 position: "top-right",
-                autoClose: 5000,
+                autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: false,
                 pauseOnHover: true,
@@ -87,7 +87,7 @@ const Body = () => {
         if (!todos) {
             toast.error("Oops.. something went wrong!!", {
                 position: "top-right",
-                autoClose: 5000,
+                autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: false,
                 pauseOnHover: true,
@@ -105,7 +105,7 @@ const Body = () => {
                 fetchApi();
                 toast.success("Update successfully!!", {
                     position: "top-right",
-                    autoClose: 5000,
+                    autoClose: 2000,
                     hideProgressBar: false,
                     closeOnClick: false,
                     pauseOnHover: true,
@@ -117,7 +117,7 @@ const Body = () => {
         } catch {
             toast.error("Oops.. something went wrong!!", {
                 position: "top-right",
-                autoClose: 5000,
+                autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: false,
                 pauseOnHover: true,
@@ -134,7 +134,7 @@ const Body = () => {
         if (!todos) {
             toast.error("Oops.. something went wrong!!", {
                 position: "top-right",
-                autoClose: 5000,
+                autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: false,
                 pauseOnHover: true,
@@ -152,7 +152,7 @@ const Body = () => {
                 fetchApi();
                 toast.success("Delete successfully!!", {
                     position: "top-right",
-                    autoClose: 5000,
+                    autoClose: 2000,
                     hideProgressBar: false,
                     closeOnClick: false,
                     pauseOnHover: true,
@@ -161,11 +161,11 @@ const Body = () => {
                     theme: "colored",
                 });
             }
-        } catch (e){
+        } catch (e) {
             console.log(e)
             toast.error("Oops.. something went wrong!!", {
                 position: "top-right",
-                autoClose: 5000,
+                autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: false,
                 pauseOnHover: true,
@@ -184,15 +184,16 @@ const Body = () => {
 
     return (
         <div className="m-5">
-        <h1 className="font-bold text-center text-xl text-red-950">{Exist ? "🚀 Welcome Back 🧠":"Hi !! Welcome 🚀💻"}</h1>
+            <h1 className="font-bold text-center text-xl text-red-950">{Exist ? "🚀 Welcome Back 🧠" : "Hi !! Welcome 🚀💻"}</h1>
             <ToastContainer />
-            <div className="flex items-center justify-center m-4">
+            <div className="flex flex-wrap items-center justify-center m-4">
                 <div className="flex flex-col mx-4">
                     <label htmlFor="title" className="font-medium mb-1">Title</label>
                     <input
                         id="title"
                         className="border-2 rounded-md h-9 w-56 px-2 outline-none focus:ring-2 focus:ring-blue-300"
                         style={{ borderColor: "black" }} // Apply red border on error
+                        value={addTodo.title}
                         onChange={(e) => setAddTodo({ ...addTodo, title: e.target.value })}
                     />
                 </div>
@@ -203,6 +204,7 @@ const Body = () => {
                         id="description"
                         className="border-2 rounded-md h-9 w-56 px-2 outline-none focus:ring-2 focus:ring-blue-300"
                         style={{ borderColor: "black" }} // Apply red border on error
+                        value={addTodo.descriptions}
                         onChange={(e) => setAddTodo({ ...addTodo, descriptions: e.target.value })}
                     />
                 </div>
@@ -212,11 +214,20 @@ const Body = () => {
                 </button>
             </div>
             <div className="mt-9 flex flex-wrap gap-4 items-center justify-center">
-                <Suspense fallback={<div className="flex justify-center items-center"><Loading/></div>}>
-                    {todo.map((item, index) => (
-                        <Card key={item.id} data={item} updateTodo={() => updateTodo(item.id)} deleteTodo={() => deleteTodo(item.id)} />
-                    ))}
-                </Suspense>
+                {todo.length === 0 ? (
+                    // Show this message when there are no todos
+                    <div className="text-gray-500 text-3xl font-semibold flex flex-col items-center mt-6 font-serif">
+                        <p >Nothing to do ? 😒</p>
+                        <p className="mt-2 text-red-400">Time to add some tasks !! 📝</p>
+                    </div>
+
+                ) : (
+                    <Suspense fallback={<div className="flex justify-center items-center"><Loading /></div>}>
+                        {todo.map((item) => (
+                            <Card key={item.id} data={item} updateTodo={() => updateTodo(item.id)} deleteTodo={() => deleteTodo(item.id)} />
+                        ))}
+                    </Suspense>
+                )}
             </div>
         </div>
     )
